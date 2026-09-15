@@ -1,0 +1,2181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>WBCMS | Staff Dashboard</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <style>
+
+        /* =====================================================
+           DASHBOARD LAYOUT
+        ===================================================== */
+
+        body.dashboard-body {
+            margin: 0;
+            background: #f5f6f8;
+        }
+
+        .dashboard-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        .dashboard-sidebar {
+            width: 250px;
+            background: #17191c;
+            color: white;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dashboard-logo {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            padding: 0 22px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .dashboard-logo-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f59e0b;
+            color: #17191c;
+            font-size: 19px;
+            margin-right: 12px;
+        }
+
+        .dashboard-logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dashboard-logo-text strong {
+            font-size: 18px;
+            letter-spacing: 1px;
+        }
+
+        .dashboard-logo-text span {
+            font-size: 10px;
+            color: #a5a7aa;
+            margin-top: 2px;
+        }
+
+
+        /* =====================================================
+           SIDEBAR NAVIGATION
+        ===================================================== */
+
+        .sidebar-nav {
+            padding: 22px 14px;
+            flex: 1;
+        }
+
+        .sidebar-section-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #777b80;
+            letter-spacing: 1px;
+            padding: 0 12px 10px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 13px;
+            margin-bottom: 5px;
+            border-radius: 9px;
+            color: #b9bdc2;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.2s ease;
+        }
+
+        .sidebar-link i {
+            width: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .sidebar-link:hover {
+            background: rgba(255,255,255,0.06);
+            color: white;
+        }
+
+        .sidebar-link.active {
+            background: #f59e0b;
+            color: #17191c;
+            font-weight: 600;
+        }
+
+
+        /* =====================================================
+           SIDEBAR USER
+        ===================================================== */
+
+        .sidebar-user {
+            padding: 16px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .sidebar-user-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #2c3035;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f59e0b;
+        }
+
+        .sidebar-user-info {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .sidebar-user-info strong {
+            font-size: 13px;
+            color: white;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .sidebar-user-info span {
+            font-size: 11px;
+            color: #888d92;
+            margin-top: 2px;
+        }
+
+
+        /* =====================================================
+           MAIN AREA
+        ===================================================== */
+
+        .dashboard-main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            min-height: 100vh;
+        }
+
+
+        /* =====================================================
+           TOPBAR
+        ===================================================== */
+
+        .dashboard-topbar {
+            height: 80px;
+            background: white;
+            border-bottom: 1px solid #e7e8ea;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 900;
+        }
+
+        .topbar-left h1 {
+            margin: 0;
+            font-size: 21px;
+            color: #202326;
+        }
+
+        .topbar-left p {
+            margin: 4px 0 0;
+            font-size: 12px;
+            color: #85888d;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+
+        /* =====================================================
+           NOTIFICATION
+        ===================================================== */
+
+        .notification-button {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: #f5f6f7;
+            border-radius: 10px;
+            cursor: pointer;
+            color: #4c5055;
+            position: relative;
+        }
+
+        .notification-button:hover {
+            background: #eceeef;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 7px;
+            height: 7px;
+            background: #ef4444;
+            border-radius: 50%;
+        }
+
+
+        /* =====================================================
+           TOP USER
+        ===================================================== */
+
+        .top-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-left: 12px;
+            border-left: 1px solid #e5e6e8;
+        }
+
+        .top-user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #202326;
+            color: #f59e0b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .top-user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-user-info strong {
+            font-size: 13px;
+            color: #25282b;
+        }
+
+        .top-user-info span {
+            font-size: 11px;
+            color: #85888d;
+            margin-top: 2px;
+        }
+
+
+        /* =====================================================
+           CONTENT
+        ===================================================== */
+
+        .dashboard-content {
+            padding: 30px;
+        }
+
+
+        /* =====================================================
+           WELCOME
+        ===================================================== */
+
+        .welcome-card {
+            background: #202326;
+            border-radius: 16px;
+            padding: 28px 30px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .welcome-card::after {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            border: 35px solid rgba(245,158,11,0.08);
+            right: -70px;
+            top: -100px;
+        }
+
+        .welcome-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-content .welcome-label {
+            color: #f59e0b;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .welcome-content h2 {
+            margin: 7px 0 5px;
+            font-size: 25px;
+        }
+
+        .welcome-content p {
+            margin: 0;
+            color: #b9bdc2;
+            font-size: 13px;
+        }
+
+        .welcome-date {
+            position: relative;
+            z-index: 1;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 13px 17px;
+            border-radius: 10px;
+            font-size: 12px;
+            color: #d7d9db;
+        }
+
+
+        /* =====================================================
+           STAT CARDS
+        ===================================================== */
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .dashboard-stat-card {
+            background: white;
+            border: 1px solid #e9eaec;
+            border-radius: 13px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .dashboard-stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 11px;
+            background: #f5f6f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .dashboard-stat-card:nth-child(1)
+        .dashboard-stat-icon {
+            color: #2563eb;
+        }
+
+        .dashboard-stat-card:nth-child(2)
+        .dashboard-stat-icon {
+            color: #16a34a;
+        }
+
+        .dashboard-stat-card:nth-child(3)
+        .dashboard-stat-icon {
+            color: #7c3aed;
+        }
+
+        .dashboard-stat-card:nth-child(4)
+        .dashboard-stat-icon {
+            color: #dc2626;
+        }
+
+        .dashboard-stat-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dashboard-stat-info span {
+            font-size: 12px;
+            color: #85888d;
+        }
+
+        .dashboard-stat-info strong {
+            font-size: 25px;
+            margin-top: 3px;
+            color: #202326;
+        }
+
+
+        /* =====================================================
+           SECTION HEADERS
+        ===================================================== */
+
+        .dashboard-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .dashboard-section-header h2 {
+            margin: 0;
+            font-size: 17px;
+            color: #202326;
+        }
+
+        .dashboard-section-header a {
+            color: #b45309;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .dashboard-section-header a:hover {
+            text-decoration: underline;
+        }
+
+
+        /* =====================================================
+           TWO COLUMN AREA
+        ===================================================== */
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 22px;
+        }
+
+        .dashboard-panel {
+            background: white;
+            border: 1px solid #e9eaec;
+            border-radius: 13px;
+            padding: 22px;
+        }
+
+
+        /* =====================================================
+           PROJECT TABLE
+        ===================================================== */
+
+        .project-table-wrapper {
+            overflow-x: auto;
+        }
+
+        .project-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .project-table th {
+            text-align: left;
+            padding: 11px 8px;
+            border-bottom: 1px solid #e9eaec;
+            color: #85888d;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .project-table td {
+            padding: 14px 8px;
+            border-bottom: 1px solid #f0f1f2;
+            font-size: 12px;
+            color: #45484c;
+        }
+
+        .project-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .project-name {
+            font-weight: 600;
+            color: #24272a !important;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #ecfdf3;
+            color: #15803d;
+        }
+
+        .status-completed {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .status-pending {
+            background: #fff7ed;
+            color: #c2410c;
+        }
+
+
+        /* =====================================================
+           QUICK ACTIONS
+        ===================================================== */
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .quick-action {
+            border: 1px solid #e8e9eb;
+            border-radius: 11px;
+            background: white;
+            padding: 17px 14px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: 0.2s ease;
+        }
+
+        .quick-action:hover {
+            border-color: #f59e0b;
+            transform: translateY(-2px);
+        }
+
+        .quick-action-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 9px;
+            background: #f7f7f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #b45309;
+        }
+
+        .quick-action-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .quick-action-content strong {
+            color: #292c2f;
+            font-size: 12px;
+        }
+
+        .quick-action-content span {
+            color: #888c91;
+            font-size: 10px;
+            margin-top: 3px;
+        }
+
+
+        /* =====================================================
+           SYSTEM STATUS
+        ===================================================== */
+
+        .system-status {
+            margin-top: 22px;
+        }
+
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f1f2;
+        }
+
+        .status-row:last-child {
+            border-bottom: none;
+        }
+
+        .status-row span {
+            font-size: 12px;
+            color: #55595d;
+        }
+
+        .online-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: #15803d;
+            font-weight: 600;
+        }
+
+        .online-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #22c55e;
+        }
+
+
+        /* =====================================================
+           LOGOUT BUTTON
+        ===================================================== */
+
+        .logout-button {
+            border: none;
+            background: transparent;
+            color: #777b80;
+            cursor: pointer;
+            padding: 10px;
+            font-size: 13px;
+            transition: 0.2s ease;
+        }
+
+        .logout-button:hover {
+            color: #dc2626;
+        }
+
+
+        /* =====================================================
+           EMPTY / ERROR
+        ===================================================== */
+
+        .dashboard-message {
+            text-align: center;
+            padding: 25px;
+            color: #888c91;
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 1100px) {
+
+            .dashboard-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        @media (max-width: 800px) {
+
+            .dashboard-sidebar {
+                width: 70px;
+            }
+
+            .dashboard-logo {
+                justify-content: center;
+                padding: 0;
+            }
+
+            .dashboard-logo-text {
+                display: none;
+            }
+
+            .sidebar-section-title,
+            .sidebar-link span,
+            .sidebar-user-info {
+                display: none;
+            }
+
+            .sidebar-link {
+                justify-content: center;
+                padding: 13px;
+            }
+
+            .sidebar-link i {
+                margin: 0;
+            }
+
+            .sidebar-user-box {
+                justify-content: center;
+            }
+
+            .dashboard-main {
+                margin-left: 70px;
+                width: calc(100% - 70px);
+            }
+
+            .dashboard-content {
+                padding: 20px;
+            }
+
+            .welcome-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .top-user-info {
+                display: none;
+            }
+
+        }
+
+
+        @media (max-width: 550px) {
+
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-topbar {
+                padding: 0 15px;
+            }
+
+            .topbar-left h1 {
+                font-size: 17px;
+            }
+
+            .welcome-content h2 {
+                font-size: 20px;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body class="dashboard-body">
+
+
+<!-- =========================================================
+     SECURITY CHECK
+========================================================= -->
+
+<script>
+
+    /*
+     * This page is STAFF ONLY.
+     *
+     * Clients must never be allowed to access
+     * the staff dashboard.
+     */
+
+    const token =
+        localStorage.getItem("wbcms_token");
+
+    const userType =
+        localStorage.getItem("wbcms_user_type");
+
+    const role =
+        localStorage.getItem("wbcms_role");
+
+
+    if (!token || userType !== "STAFF") {
+
+        window.location.replace("/staff-login.html");
+
+    }
+
+</script>
+
+
+<div class="dashboard-layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="dashboard-sidebar">
+
+
+        <!-- Logo -->
+
+        <div class="dashboard-logo">
+
+            <div class="dashboard-logo-icon">
+                <i class="fa-solid fa-building"></i>
+            </div>
+
+            <div class="dashboard-logo-text">
+
+                <strong>
+                    WBCMS
+                </strong>
+
+                <span>
+                    STAFF PORTAL
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- Navigation -->
+
+        <nav class="sidebar-nav">
+
+            <div class="sidebar-section-title">
+                MAIN MENU
+            </div>
+
+
+            <a href="/dashboard.html"
+               class="sidebar-link active">
+
+                <i class="fa-solid fa-chart-pie"></i>
+
+                <span>
+                    Dashboard
+                </span>
+
+            </a>
+
+
+            <a href="#"
+               class="sidebar-link"
+               onclick="openModuleMessage('Projects')">
+
+                <i class="fa-solid fa-building"></i>
+
+                <span>
+                    Projects
+                </span>
+
+            </a>
+
+
+            <a href="#"
+               class="sidebar-link"
+               onclick="openModuleMessage('Tasks')">
+
+                <i class="fa-solid fa-list-check"></i>
+
+                <span>
+                    Tasks
+                </span>
+
+            </a>
+
+
+            <a href="#"
+               class="sidebar-link"
+               onclick="openModuleMessage('Progress')">
+
+                <i class="fa-solid fa-chart-line"></i>
+
+                <span>
+                    Progress
+                </span>
+
+            </a>
+
+
+            <a href="#"
+               class="sidebar-link"
+               onclick="openModuleMessage('Materials & Inventory')">
+
+                <i class="fa-solid fa-boxes-stacked"></i>
+
+                <span>
+                    Materials
+                </span>
+
+            </a>
+
+
+            <a href="#"
+               class="sidebar-link"
+               onclick="openModuleMessage('Documents')">
+
+                <i class="fa-solid fa-file-lines"></i>
+
+                <span>
+                    Documents
+                </span>
+
+            </a>
+
+
+            <a href="#"
+               class="sidebar-link"
+               onclick="openModuleMessage('Reports')">
+
+                <i class="fa-solid fa-chart-column"></i>
+
+                <span>
+                    Reports
+                </span>
+
+            </a>
+
+
+            <div class="sidebar-section-title"
+                 style="margin-top:25px;">
+
+                SYSTEM
+            </div>
+
+
+            <a href="#"
+               class="sidebar-link"
+               onclick="openModuleMessage('User Management')">
+
+                <i class="fa-solid fa-users-gear"></i>
+
+                <span>
+                    User Management
+                </span>
+
+            </a>
+
+        </nav>
+
+
+        <!-- Sidebar User -->
+
+        <div class="sidebar-user">
+
+            <div class="sidebar-user-box">
+
+                <div class="sidebar-user-avatar">
+
+                    <i class="fa-solid fa-user"></i>
+
+                </div>
+
+
+                <div class="sidebar-user-info">
+
+                    <strong id="sidebarUserName">
+                        Staff User
+                    </strong>
+
+                    <span id="sidebarUserRole">
+                        Staff
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <main class="dashboard-main">
+
+
+        <!-- =================================================
+             TOP BAR
+        ================================================== -->
+
+        <header class="dashboard-topbar">
+
+
+            <div class="topbar-left">
+
+                <h1>
+                    Staff Dashboard
+                </h1>
+
+                <p>
+                    Construction Management System
+                </p>
+
+            </div>
+
+
+            <div class="topbar-right">
+
+
+                <!-- Notifications -->
+
+                <button class="notification-button"
+                        onclick="openModuleMessage('Notifications')">
+
+                    <i class="fa-regular fa-bell"></i>
+
+                    <span class="notification-badge"></span>
+
+                </button>
+
+
+                <!-- User -->
+
+                <div class="top-user">
+
+                    <div class="top-user-avatar">
+
+                        <i class="fa-solid fa-user"></i>
+
+                    </div>
+
+
+                    <div class="top-user-info">
+
+                        <strong id="topUser">
+                            Staff User
+                        </strong>
+
+                        <span id="userRole">
+                            Staff
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Logout -->
+
+                <button class="logout-button"
+                        id="logoutBtn"
+                        title="Logout">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- =================================================
+             DASHBOARD CONTENT
+        ================================================== -->
+
+        <div class="dashboard-content">
+
+
+            <!-- =============================================
+                 WELCOME
+            ============================================== -->
+
+            <section class="welcome-card">
+
+                <div class="welcome-content">
+
+                    <div class="welcome-label">
+                        WELCOME BACK
+                    </div>
+
+                    <h2>
+                        Hello, <span id="welcomeUser">Staff User</span>!
+                    </h2>
+
+                    <p>
+                        Here's what's happening with your
+                        construction projects today.
+                    </p>
+
+                </div>
+
+
+                <div class="welcome-date"
+                     id="todayDate">
+
+                    <i class="fa-regular fa-calendar"></i>
+
+                    Today
+
+                </div>
+
+            </section>
+
+
+            <!-- =============================================
+                 STATISTICS
+            ============================================== -->
+
+            <section class="dashboard-stats">
+
+
+                <!-- Total Projects -->
+
+                <div class="dashboard-stat-card">
+
+                    <div class="dashboard-stat-icon">
+
+                        <i class="fa-solid fa-building"></i>
+
+                    </div>
+
+                    <div class="dashboard-stat-info">
+
+                        <span>
+                            Total Projects
+                        </span>
+
+                        <strong id="totalProjects">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Active Projects -->
+
+                <div class="dashboard-stat-card">
+
+                    <div class="dashboard-stat-icon">
+
+                        <i class="fa-solid fa-spinner"></i>
+
+                    </div>
+
+                    <div class="dashboard-stat-info">
+
+                        <span>
+                            Active Projects
+                        </span>
+
+                        <strong id="activeProjects">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Completed -->
+
+                <div class="dashboard-stat-card">
+
+                    <div class="dashboard-stat-icon">
+
+                        <i class="fa-solid fa-circle-check"></i>
+
+                    </div>
+
+                    <div class="dashboard-stat-info">
+
+                        <span>
+                            Completed
+                        </span>
+
+                        <strong id="completedProjects">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Attention -->
+
+                <div class="dashboard-stat-card">
+
+                    <div class="dashboard-stat-icon">
+
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+
+                    </div>
+
+                    <div class="dashboard-stat-info">
+
+                        <span>
+                            Tasks Need Attention
+                        </span>
+
+                        <strong id="attentionTasks">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =============================================
+                 DASHBOARD GRID
+            ============================================== -->
+
+            <div class="dashboard-grid">
+
+
+                <!-- =========================================
+                     RECENT PROJECTS
+                ========================================== -->
+
+                <section class="dashboard-panel">
+
+                    <div class="dashboard-section-header">
+
+                        <h2>
+                            Recent Projects
+                        </h2>
+
+                        <a href="#"
+                           onclick="openModuleMessage('Projects'); return false;">
+
+                            View All
+
+                        </a>
+
+                    </div>
+
+
+                    <div class="project-table-wrapper">
+
+                        <table class="project-table">
+
+                            <thead>
+
+                            <tr>
+
+                                <th>
+                                    Project
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Progress
+                                </th>
+
+                            </tr>
+
+                            </thead>
+
+
+                            <tbody id="recentProjects">
+
+                            <tr>
+
+                                <td colspan="3"
+                                    class="dashboard-message">
+
+                                    Loading projects...
+
+                                </td>
+
+                            </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =========================================
+                     QUICK ACTIONS
+                ========================================== -->
+
+                <section class="dashboard-panel">
+
+                    <div class="dashboard-section-header">
+
+                        <h2>
+                            Quick Actions
+                        </h2>
+
+                    </div>
+
+
+                    <div class="quick-actions">
+
+
+                        <a href="#"
+                           class="quick-action"
+                           onclick="openModuleMessage('Create Project'); return false;">
+
+                            <div class="quick-action-icon">
+
+                                <i class="fa-solid fa-plus"></i>
+
+                            </div>
+
+                            <div class="quick-action-content">
+
+                                <strong>
+                                    New Project
+                                </strong>
+
+                                <span>
+                                    Create a project
+                                </span>
+
+                            </div>
+
+                        </a>
+
+
+                        <a href="#"
+                           class="quick-action"
+                           onclick="openModuleMessage('Create Task'); return false;">
+
+                            <div class="quick-action-icon">
+
+                                <i class="fa-solid fa-list-check"></i>
+
+                            </div>
+
+                            <div class="quick-action-content">
+
+                                <strong>
+                                    New Task
+                                </strong>
+
+                                <span>
+                                    Assign a task
+                                </span>
+
+                            </div>
+
+                        </a>
+
+
+                        <a href="#"
+                           class="quick-action"
+                           onclick="openModuleMessage('Materials'); return false;">
+
+                            <div class="quick-action-icon">
+
+                                <i class="fa-solid fa-boxes-stacked"></i>
+
+                            </div>
+
+                            <div class="quick-action-content">
+
+                                <strong>
+                                    Materials
+                                </strong>
+
+                                <span>
+                                    Manage inventory
+                                </span>
+
+                            </div>
+
+                        </a>
+
+
+                        <a href="#"
+                           class="quick-action"
+                           onclick="openModuleMessage('Reports'); return false;">
+
+                            <div class="quick-action-icon">
+
+                                <i class="fa-solid fa-file-chart-column"></i>
+
+                            </div>
+
+                            <div class="quick-action-content">
+
+                                <strong>
+                                    Reports
+                                </strong>
+
+                                <span>
+                                    Generate reports
+                                </span>
+
+                            </div>
+
+                        </a>
+
+                    </div>
+
+
+                    <!-- System Status -->
+
+                    <div class="system-status">
+
+                        <div class="dashboard-section-header">
+
+                            <h2>
+                                System Status
+                            </h2>
+
+                        </div>
+
+
+                        <div class="status-row">
+
+                            <span>
+                                Database
+                            </span>
+
+                            <div class="online-status">
+
+                                <span class="online-dot"></span>
+
+                                <span>
+                                    Online
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="status-row">
+
+                            <span>
+                                Application
+                            </span>
+
+                            <div class="online-status">
+
+                                <span class="online-dot"></span>
+
+                                <span>
+                                    Running
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="status-row">
+
+                            <span>
+                                Authentication
+                            </span>
+
+                            <div class="online-status">
+
+                                <span class="online-dot"></span>
+
+                                <span>
+                                    Secure
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+    /* ============================================================
+       AUTHENTICATION
+    ============================================================ */
+
+    const authToken =
+        localStorage.getItem("wbcms_token");
+
+    const authUserType =
+        localStorage.getItem("wbcms_user_type");
+
+    const authRole =
+        localStorage.getItem("wbcms_role");
+
+    const storedUsername =
+        localStorage.getItem("wbcms_username");
+
+
+    /*
+     * Double-check staff access.
+     *
+     * This protects the dashboard even if somebody
+     * manually enters /dashboard.html.
+     */
+
+    if (!authToken || authUserType !== "STAFF") {
+
+        window.location.replace("/staff-login.html");
+
+    }
+
+
+    /* ============================================================
+       AUTH HEADERS
+    ============================================================ */
+
+    function authHeaders() {
+
+        return {
+
+            "Authorization":
+                "Bearer " + authToken,
+
+            "Content-Type":
+                "application/json"
+
+        };
+
+    }
+
+
+    /* ============================================================
+       ESCAPE HTML
+    ============================================================ */
+
+    function escapeHtml(value) {
+
+        if (value === null ||
+            value === undefined) {
+
+            return "";
+
+        }
+
+        return String(value)
+
+            .replace(/&/g, "&amp;")
+
+            .replace(/</g, "&lt;")
+
+            .replace(/>/g, "&gt;")
+
+            .replace(/"/g, "&quot;")
+
+            .replace(/'/g, "&#039;");
+
+    }
+
+
+    /* ============================================================
+       USER INFORMATION
+    ============================================================ */
+
+    function loadUserInformation() {
+
+        const username =
+            storedUsername || "Staff User";
+
+        const roleName =
+            authRole || "STAFF";
+
+
+        const topUser =
+            document.getElementById("topUser");
+
+        const sidebarUserName =
+            document.getElementById("sidebarUserName");
+
+        const welcomeUser =
+            document.getElementById("welcomeUser");
+
+        const userRole =
+            document.getElementById("userRole");
+
+        const sidebarUserRole =
+            document.getElementById("sidebarUserRole");
+
+
+        if (topUser) {
+
+            topUser.textContent =
+                username;
+
+        }
+
+
+        if (sidebarUserName) {
+
+            sidebarUserName.textContent =
+                username;
+
+        }
+
+
+        if (welcomeUser) {
+
+            welcomeUser.textContent =
+                username;
+
+        }
+
+
+        if (userRole) {
+
+            userRole.textContent =
+                formatRole(roleName);
+
+        }
+
+
+        if (sidebarUserRole) {
+
+            sidebarUserRole.textContent =
+                formatRole(roleName);
+
+        }
+
+    }
+
+
+    /* ============================================================
+       FORMAT ROLE
+    ============================================================ */
+
+    function formatRole(role) {
+
+        if (!role) {
+            return "Staff";
+        }
+
+        return role
+
+            .toLowerCase()
+
+            .split("_")
+
+            .map(word =>
+                word.charAt(0).toUpperCase() +
+                word.slice(1)
+            )
+
+            .join(" ");
+
+    }
+
+
+    /* ============================================================
+       CURRENT DATE
+    ============================================================ */
+
+    function loadCurrentDate() {
+
+        const dateElement =
+            document.getElementById("todayDate");
+
+        if (!dateElement) {
+            return;
+        }
+
+
+        const now =
+            new Date();
+
+
+        const formattedDate =
+            now.toLocaleDateString(
+                "en-US",
+                {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
+                }
+            );
+
+
+        dateElement.innerHTML = `
+
+        <i class="fa-regular fa-calendar"></i>
+
+        ${escapeHtml(formattedDate)}
+
+    `;
+
+    }
+
+
+    /* ============================================================
+       LOAD DASHBOARD DATA
+    ============================================================ */
+
+    async function loadDashboardData() {
+
+        /*
+         * We attempt to load the dashboard data from
+         * the backend.
+         *
+         * These endpoints can be connected to the actual
+         * project/report controllers as we build the modules.
+         */
+
+        try {
+
+            const results =
+                await Promise.allSettled([
+
+                    fetch(
+                        "/api/reports/summary",
+                        {
+                            method: "GET",
+                            headers: authHeaders()
+                        }
+                    ),
+
+                    fetch(
+                        "/api/projects?page=0&size=6",
+                        {
+                            method: "GET",
+                            headers: authHeaders()
+                        }
+                    )
+
+                ]);
+
+
+            /* ================================================
+               REPORT SUMMARY
+            ================================================= */
+
+            const summaryResult =
+                results[0];
+
+
+            if (
+                summaryResult.status === "fulfilled" &&
+                summaryResult.value.ok
+            ) {
+
+                const summary =
+                    await summaryResult.value.json();
+
+                updateSummary(summary);
+
+            }
+
+
+            /* ================================================
+               PROJECTS
+            ================================================= */
+
+            const projectResult =
+                results[1];
+
+
+            if (
+                projectResult.status === "fulfilled" &&
+                projectResult.value.ok
+            ) {
+
+                const projectData =
+                    await projectResult.value.json();
+
+                updateProjects(projectData);
+
+            }
+            else {
+
+                showProjectPlaceholder();
+
+            }
+
+        }
+        catch (error) {
+
+            console.error(
+                "Dashboard loading error:",
+                error
+            );
+
+            showProjectPlaceholder();
+
+        }
+
+    }
+
+
+    /* ============================================================
+       UPDATE SUMMARY
+    ============================================================ */
+
+    function updateSummary(summary) {
+
+        if (!summary) {
+            return;
+        }
+
+
+        const totalProjects =
+            document.getElementById("totalProjects");
+
+        const activeProjects =
+            document.getElementById("activeProjects");
+
+        const completedProjects =
+            document.getElementById("completedProjects");
+
+        const attentionTasks =
+            document.getElementById("attentionTasks");
+
+
+        /*
+         * Support several possible backend property names.
+         */
+
+        if (totalProjects) {
+
+            totalProjects.textContent =
+                summary.totalProjects ??
+                summary.total ??
+                0;
+
+        }
+
+
+        if (activeProjects) {
+
+            activeProjects.textContent =
+                summary.activeProjects ??
+                summary.active ??
+                0;
+
+        }
+
+
+        if (completedProjects) {
+
+            completedProjects.textContent =
+                summary.completedProjects ??
+                summary.completed ??
+                0;
+
+        }
+
+
+        if (attentionTasks) {
+
+            attentionTasks.textContent =
+                summary.attentionTasks ??
+                summary.pendingTasks ??
+                summary.tasksNeedAttention ??
+                0;
+
+        }
+
+    }
+
+
+    /* ============================================================
+       UPDATE PROJECTS
+    ============================================================ */
+
+    function updateProjects(data) {
+
+        const table =
+            document.getElementById("recentProjects");
+
+        if (!table) {
+            return;
+        }
+
+
+        /*
+         * Spring Data Page normally returns:
+         *
+         * {
+         *   content: [...]
+         * }
+         */
+
+        const projects =
+            Array.isArray(data)
+                ? data
+                : (data.content || []);
+
+
+        if (projects.length === 0) {
+
+            showProjectPlaceholder(
+                "No projects available yet."
+            );
+
+            return;
+
+        }
+
+
+        table.innerHTML = "";
+
+
+        projects.slice(0, 6).forEach(
+            function(project) {
+
+                const row =
+                    document.createElement("tr");
+
+
+                const projectName =
+                    project.name ||
+                    project.projectName ||
+                    "Unnamed Project";
+
+
+                const status =
+                    project.status ||
+                    "Pending";
+
+
+                const progress =
+                    project.progressPercentage ??
+                    project.progress ??
+                    0;
+
+
+                row.innerHTML = `
+
+                <td class="project-name">
+
+                    ${escapeHtml(projectName)}
+
+                </td>
+
+
+                <td>
+
+                    ${createStatusBadge(status)}
+
+                </td>
+
+
+                <td>
+
+                    ${escapeHtml(progress)}%
+
+                </td>
+
+            `;
+
+
+                table.appendChild(row);
+
+            }
+        );
+
+    }
+
+
+    /* ============================================================
+       STATUS BADGE
+    ============================================================ */
+
+    function createStatusBadge(status) {
+
+        const cleanStatus =
+            String(status || "Pending");
+
+
+        const lower =
+            cleanStatus.toLowerCase();
+
+
+        let className =
+            "status-pending";
+
+
+        if (
+            lower.includes("active") ||
+            lower.includes("ongoing") ||
+            lower.includes("progress")
+        ) {
+
+            className =
+                "status-active";
+
+        }
+        else if (
+            lower.includes("complete") ||
+            lower.includes("finished")
+        ) {
+
+            className =
+                "status-completed";
+
+        }
+
+
+        return `
+
+        <span class="status-badge ${className}">
+
+            ${escapeHtml(cleanStatus)}
+
+        </span>
+
+    `;
+
+    }
+
+
+    /* ============================================================
+       PROJECT PLACEHOLDER
+    ============================================================ */
+
+    function showProjectPlaceholder(
+        message = "Project data will appear here."
+    ) {
+
+        const table =
+            document.getElementById("recentProjects");
+
+        if (!table) {
+            return;
+        }
+
+
+        table.innerHTML = `
+
+        <tr>
+
+            <td colspan="3"
+                class="dashboard-message">
+
+                ${escapeHtml(message)}
+
+            </td>
+
+        </tr>
+
+    `;
+
+    }
+
+
+    /* ============================================================
+       MODULE MESSAGE
+    ============================================================ */
+
+    /*
+     * Some sidebar modules are intentionally not connected
+     * yet.
+     *
+     * Instead of opening a broken page, show a clear message.
+     *
+     * Once we build each module, we will replace this function
+     * with the actual page navigation.
+     */
+
+    function openModuleMessage(moduleName) {
+
+        alert(
+            moduleName +
+            " module will be connected next."
+        );
+
+    }
+
+
+    /* ============================================================
+       LOGOUT
+    ============================================================ */
+
+    function logout() {
+
+        /*
+         * Remove authentication/session information.
+         */
+
+        localStorage.removeItem("wbcms_token");
+
+        localStorage.removeItem("wbcms_user_id");
+
+        localStorage.removeItem("wbcms_username");
+
+        localStorage.removeItem("wbcms_role");
+
+        localStorage.removeItem("wbcms_user_type");
+
+
+        /*
+         * Return to staff login.
+         */
+
+        window.location.replace(
+            "/staff-login.html"
+        );
+
+    }
+
+
+    /* ============================================================
+       LOGOUT BUTTON EVENT
+    ============================================================ */
+
+    document
+        .getElementById("logoutBtn")
+        ?.addEventListener(
+            "click",
+            logout
+        );
+
+
+    /* ============================================================
+       INITIALIZE DASHBOARD
+    ============================================================ */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function() {
+
+            loadUserInformation();
+
+            loadCurrentDate();
+
+            loadDashboardData();
+
+        }
+    );
+
+</script>
+
+</body>
+</html>

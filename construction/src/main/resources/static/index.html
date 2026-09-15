@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>WBCMS | Build Better Together</title>
+
+    <link rel="stylesheet"
+          href="/css/style.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+
+    <style>
+
+        /* =====================================================
+           LOGIN CHOICE MODAL
+        ===================================================== */
+
+        .login-modal {
+
+            position: fixed;
+
+            inset: 0;
+
+            display: none;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 20px;
+
+            background:
+                    rgba(3, 10, 20, 0.75);
+
+            backdrop-filter:
+                    blur(10px);
+
+            z-index: 9999;
+
+            animation:
+                    modalFade 0.25s ease;
+
+        }
+
+
+        .login-modal.show {
+
+            display: flex;
+
+        }
+
+
+        .login-modal-card {
+
+            width: 100%;
+
+            max-width: 480px;
+
+            padding: 35px;
+
+            border-radius: 25px;
+
+            background:
+                    rgba(255,255,255,0.97);
+
+            color: #142238;
+
+            box-shadow:
+                    0 30px 90px
+                    rgba(0,0,0,0.45);
+
+            animation:
+                    modalUp 0.35s ease;
+
+            position: relative;
+
+        }
+
+
+        .modal-close {
+
+            position: absolute;
+
+            top: 17px;
+
+            right: 18px;
+
+            width: 36px;
+
+            height: 36px;
+
+            border: none;
+
+            border-radius: 50%;
+
+            background: #f0f3f7;
+
+            color: #5c6878;
+
+            cursor: pointer;
+
+            font-size: 17px;
+
+            transition: 0.25s;
+
+        }
+
+
+        .modal-close:hover {
+
+            background: #e4e9ef;
+
+            transform: rotate(90deg);
+
+        }
+
+
+        .modal-icon {
+
+            width: 64px;
+
+            height: 64px;
+
+            margin: 0 auto 18px;
+
+            border-radius: 18px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background:
+                    linear-gradient(
+                            135deg,
+                            #1478ff,
+                            #6c3cff
+                    );
+
+            color: white;
+
+            font-size: 27px;
+
+            box-shadow:
+                    0 12px 30px
+                    rgba(20,120,255,0.25);
+
+        }
+
+
+        .login-modal-card h2 {
+
+            text-align: center;
+
+            margin:
+                    0 0 8px;
+
+            font-size: 27px;
+
+        }
+
+
+        .login-modal-card > p {
+
+            text-align: center;
+
+            color: #718096;
+
+            font-size: 14px;
+
+            margin:
+                    0 0 25px;
+
+        }
+
+
+        .login-choice-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                    1fr 1fr;
+
+            gap: 15px;
+
+        }
+
+
+        .login-choice {
+
+            border: 1px solid #e0e6ed;
+
+            background: #ffffff;
+
+            border-radius: 17px;
+
+            padding: 23px 15px;
+
+            cursor: pointer;
+
+            text-align: center;
+
+            transition:
+                    0.3s ease;
+
+        }
+
+
+        .login-choice:hover {
+
+            transform:
+                    translateY(-5px);
+
+            box-shadow:
+                    0 15px 30px
+                    rgba(0,0,0,0.10);
+
+        }
+
+
+        .client-choice:hover {
+
+            border-color:
+                    #2583ff;
+
+            background:
+                    #f4f8ff;
+
+        }
+
+
+        .staff-choice:hover {
+
+            border-color:
+                    #ff8500;
+
+            background:
+                    #fff8ef;
+
+        }
+
+
+        .choice-icon {
+
+            width: 52px;
+
+            height: 52px;
+
+            margin:
+                    0 auto 13px;
+
+            border-radius: 14px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 21px;
+
+        }
+
+
+        .client-choice .choice-icon {
+
+            background:
+                    rgba(20,120,255,0.11);
+
+            color:
+                    #1478ff;
+
+        }
+
+
+        .staff-choice .choice-icon {
+
+            background:
+                    rgba(255,125,0,0.12);
+
+            color:
+                    #ed7100;
+
+        }
+
+
+        .login-choice strong {
+
+            display:
+                    block;
+
+            font-size:
+                    16px;
+
+            margin-bottom:
+                    6px;
+
+        }
+
+
+        .login-choice small {
+
+            display:
+                    block;
+
+            color:
+                    #7b8797;
+
+            line-height:
+                    1.5;
+
+            font-size:
+                    11px;
+
+        }
+
+
+        .modal-footer {
+
+            text-align:
+                    center;
+
+            margin-top:
+                    22px;
+
+            padding-top:
+                    18px;
+
+            border-top:
+                    1px solid #e5e9ee;
+
+            color:
+                    #8994a2;
+
+            font-size:
+                    11px;
+
+        }
+
+
+        /* =====================================================
+           FLOATING SECURITY BADGE
+        ===================================================== */
+
+        .security-badge {
+
+            position:
+                    fixed;
+
+            right:
+                    22px;
+
+            bottom:
+                    22px;
+
+            z-index:
+                    100;
+
+            display:
+                    flex;
+
+            align-items:
+                    center;
+
+            gap:
+                    8px;
+
+            padding:
+                    10px 14px;
+
+            border-radius:
+                    30px;
+
+            background:
+                    rgba(7,18,31,0.85);
+
+            border:
+                    1px solid
+                    rgba(255,255,255,0.12);
+
+            backdrop-filter:
+                    blur(10px);
+
+            color:
+                    rgba(255,255,255,0.8);
+
+            font-size:
+                    11px;
+
+        }
+
+
+        .security-badge i {
+
+            color:
+                    #43d17d;
+
+        }
+
+
+        /* =====================================================
+           ANIMATIONS
+        ===================================================== */
+
+        @keyframes modalFade {
+
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+
+        }
+
+
+        @keyframes modalUp {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                        translateY(25px)
+                        scale(0.97);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                        translateY(0)
+                        scale(1);
+
+            }
+
+        }
+
+
+        /* =====================================================
+           RESPONSIVE MODAL
+        ===================================================== */
+
+        @media (max-width: 560px) {
+
+            .login-modal-card {
+
+                padding:
+                        28px 20px;
+
+            }
+
+            .login-choice-grid {
+
+                grid-template-columns:
+                        1fr;
+
+            }
+
+            .security-badge {
+
+                display:
+                        none;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header class="site-header">
+
+
+    <!-- BRAND -->
+
+    <a class="brand"
+       href="/index.html">
+
+        <span class="brand-mark">
+            🏗️
+        </span>
+
+        WBCMS
+
+    </a>
+
+
+    <!-- NAVIGATION -->
+
+    <nav>
+
+        <a href="#projects">
+            Projects
+        </a>
+
+        <a href="#features">
+            Features
+        </a>
+
+        <a href="#about">
+            About
+        </a>
+
+        <a href="#reviews">
+            Reviews
+        </a>
+
+        <a href="#contact">
+            Contact
+        </a>
+
+    </nav>
+
+
+    <!-- HEADER ACTIONS -->
+
+    <div class="header-actions">
+
+
+        <!-- SIGN IN -->
+
+        <button
+                class="btn btn-ghost"
+                onclick="openLoginChoice()">
+
+            Sign In
+
+        </button>
+
+
+        <!-- GET STARTED -->
+
+        <button
+                class="btn btn-primary"
+                onclick="openLoginChoice()">
+
+            Get Started
+
+        </button>
+
+
+    </div>
+
+</header>
+
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main>
+
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
+    <section class="hero">
+
+
+        <div class="hero-content">
+
+
+            <span class="eyebrow">
+
+                ✦ CONSTRUCTION MANAGEMENT PLATFORM
+
+            </span>
+
+
+            <h1>
+
+                Build Better
+                <br>
+
+                <span>Together.</span>
+
+            </h1>
+
+
+            <p>
+
+                Plan, manage, monitor and deliver
+                construction projects with confidence —
+                from small builds to large developments.
+
+            </p>
+
+
+            <div class="hero-actions">
+
+
+                <a href="#projects"
+                   class="btn btn-primary btn-large">
+
+                    Explore Projects →
+
+                </a>
+
+
+                <a href="#features"
+                   class="btn btn-glass btn-large">
+
+                    See How It Works
+
+                </a>
+
+            </div>
+
+
+            <!-- STATS -->
+
+            <div class="hero-stats">
+
+
+                <div>
+
+                    <strong>
+                        50+
+                    </strong>
+
+                    <span>
+                        Projects Completed
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        98%
+                    </strong>
+
+                    <span>
+                        Client Satisfaction
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        15+
+                    </strong>
+
+                    <span>
+                        Industry Partners
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        24/7
+                    </strong>
+
+                    <span>
+                        Project Support
+                    </span>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- HERO CARD -->
+
+        <div class="hero-card glass-card">
+
+
+            <span class="small-line"></span>
+
+
+            <h3>
+
+                Modern Construction
+
+                <br>
+
+                for a Better Tomorrow.
+
+            </h3>
+
+
+            <p>
+
+                Sustainable. Innovative. Reliable.
+
+            </p>
+
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================================
+         FEATURES
+    ====================================================== -->
+
+    <section id="features"
+             class="section">
+
+
+        <div class="section-heading">
+
+
+            <span class="eyebrow">
+
+                Everything your site needs
+
+            </span>
+
+
+            <h2>
+
+                One platform.
+
+                <span>
+                    Every stakeholder.
+                </span>
+
+            </h2>
+
+
+            <p>
+
+                Connect project managers, engineers,
+                supervisors, clients and procurement teams
+                in one place.
+
+            </p>
+
+
+        </div>
+
+
+
+        <div class="feature-grid">
+
+
+            <article class="feature-card large">
+
+
+                <span class="feature-icon">
+                    ▦
+                </span>
+
+
+                <h3>
+                    Project Management
+                </h3>
+
+
+                <p>
+
+                    Manage schedules, budgets, milestones,
+                    documents and project progress from
+                    one workspace.
+
+                </p>
+
+
+                <button
+                        onclick="openStaffLogin()"
+                        class="module-link">
+
+                    Explore module →
+
+                </button>
+
+
+            </article>
+
+
+
+            <article class="feature-card">
+
+
+                <span class="feature-icon blue">
+                    ⌁
+                </span>
+
+
+                <h3>
+                    Data & Workflow
+                </h3>
+
+
+                <p>
+
+                    Keep project information organized
+                    and visible to the right people.
+
+                </p>
+
+
+            </article>
+
+
+
+            <article class="feature-card">
+
+
+                <span class="feature-icon purple">
+                    ◉
+                </span>
+
+
+                <h3>
+                    Progress Monitoring
+                </h3>
+
+
+                <p>
+
+                    Track completion, tasks, reports
+                    and project health.
+
+                </p>
+
+
+            </article>
+
+
+
+            <article class="feature-card">
+
+
+                <span class="feature-icon green">
+                    ▣
+                </span>
+
+
+                <h3>
+                    Materials & Inventory
+                </h3>
+
+
+                <p>
+
+                    Monitor stock, material requests
+                    and urgent reorder requirements.
+
+                </p>
+
+
+            </article>
+
+
+
+            <article class="feature-card">
+
+
+                <span class="feature-icon orange">
+                    ◎
+                </span>
+
+
+                <h3>
+                    Client Portal
+                </h3>
+
+
+                <p>
+
+                    Give clients a clear view of their
+                    projects and updates.
+
+                </p>
+
+
+                <button
+                        onclick="openClientLogin()"
+                        class="module-link">
+
+                    Client Portal →
+
+                </button>
+
+
+            </article>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         PROJECTS
+    ====================================================== -->
+
+    <section id="projects"
+             class="section">
+
+
+        <div class="section-heading split-heading">
+
+
+            <div>
+
+                <span class="eyebrow">
+                    OUR WORK
+                </span>
+
+
+                <h2>
+
+                    Projects we're
+
+                    <span>
+                        building.
+                    </span>
+
+                </h2>
+
+            </div>
+
+
+            <button
+                    onclick="openClientLogin()"
+                    class="btn btn-ghost">
+
+                View All Projects →
+
+            </button>
+
+
+        </div>
+
+
+
+        <div class="public-project-grid">
+
+
+            <article class="public-project">
+
+
+                <div class="project-photo photo-1"></div>
+
+
+                <div class="project-body">
+
+
+                    <span class="status-badge active">
+                        Active
+                    </span>
+
+
+                    <h3>
+                        Beachfront Hotel Resort
+                    </h3>
+
+
+                    <p>
+                        Negombo · Hospitality
+                    </p>
+
+
+                </div>
+
+            </article>
+
+
+
+            <article class="public-project">
+
+
+                <div class="project-photo photo-2"></div>
+
+
+                <div class="project-body">
+
+
+                    <span class="status-badge active">
+                        Active
+                    </span>
+
+
+                    <h3>
+                        Harbor Bridge Expansion
+                    </h3>
+
+
+                    <p>
+                        Galle · Infrastructure
+                    </p>
+
+
+                </div>
+
+            </article>
+
+
+
+            <article class="public-project">
+
+
+                <div class="project-photo photo-3"></div>
+
+
+                <div class="project-body">
+
+
+                    <span class="status-badge planning">
+                        Planning
+                    </span>
+
+
+                    <h3>
+                        Northern Highway Renovation
+                    </h3>
+
+
+                    <p>
+                        Vavuniya · Transport
+                    </p>
+
+
+                </div>
+
+            </article>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         ABOUT
+    ====================================================== -->
+
+    <section id="about"
+             class="section story-section">
+
+
+        <div class="story-copy">
+
+
+            <span class="eyebrow">
+                BUILT AROUND PEOPLE
+            </span>
+
+
+            <h2>
+
+                From first plan to
+
+                <span>
+                    final handover.
+                </span>
+
+            </h2>
+
+
+            <p>
+
+                WBCMS gives every stakeholder a shared
+                source of truth. Staff members get detailed
+                operational information, while clients get
+                a simple and transparent project experience.
+
+            </p>
+
+
+            <ul class="check-list">
+
+
+                <li>
+                    Role-based access
+                </li>
+
+
+                <li>
+                    Project and task management
+                </li>
+
+
+                <li>
+                    Progress monitoring
+                </li>
+
+
+                <li>
+                    Documents and materials
+                </li>
+
+
+                <li>
+                    Reports and notifications
+                </li>
+
+
+            </ul>
+
+
+        </div>
+
+
+
+        <div class="story-panel glass-card">
+
+
+            <div class="mini-metric">
+
+
+                <strong>
+                    98%
+                </strong>
+
+
+                <span>
+                    On-time delivery goal
+                </span>
+
+
+            </div>
+
+
+            <div class="mini-bar">
+
+                <i style="width:82%"></i>
+
+            </div>
+
+
+            <div class="mini-row">
+
+                <span>
+                    Project health
+                </span>
+
+                <b>
+                    Healthy
+                </b>
+
+            </div>
+
+
+            <div class="mini-row">
+
+                <span>
+                    Active projects
+                </span>
+
+                <b>
+                    6
+                </b>
+
+            </div>
+
+
+            <div class="mini-row">
+
+                <span>
+                    Team members
+                </span>
+
+                <b>
+                    24
+                </b>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         REVIEWS
+    ====================================================== -->
+
+    <section id="reviews"
+             class="section">
+
+
+        <div class="section-heading">
+
+
+            <span class="eyebrow">
+                CLIENT FEEDBACK
+            </span>
+
+
+            <h2>
+
+                Trusted by
+
+                <span>
+                    project teams.
+                </span>
+
+            </h2>
+
+
+        </div>
+
+
+
+        <div class="review-grid">
+
+
+            <blockquote>
+
+                “The team finally has one place
+                to see progress, documents and
+                material requirements.”
+
+                <footer>
+                    — Project Manager
+                </footer>
+
+            </blockquote>
+
+
+
+            <blockquote>
+
+                “Clear updates and visibility made
+                the construction process much easier.”
+
+                <footer>
+                    — Client Representative
+                </footer>
+
+            </blockquote>
+
+
+
+            <blockquote>
+
+                “We can identify stock issues
+                before they become site delays.”
+
+                <footer>
+                    — Procurement Officer
+                </footer>
+
+            </blockquote>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         CTA
+    ====================================================== -->
+
+    <section id="contact"
+             class="cta-section">
+
+
+        <div>
+
+
+            <span class="eyebrow">
+                READY TO BUILD?
+            </span>
+
+
+            <h2>
+                Take control of your projects.
+            </h2>
+
+
+            <p>
+                Sign in to access your WBCMS workspace.
+            </p>
+
+
+        </div>
+
+
+        <button
+                onclick="openLoginChoice()"
+                class="btn btn-primary btn-large">
+
+            Sign In to WBCMS →
+
+        </button>
+
+
+    </section>
+
+
+</main>
+
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer class="footer">
+
+
+    <span>
+
+        🏗️ WBCMS
+
+    </span>
+
+
+    <small>
+
+        © 2026 WBCMS.
+
+        Construction management made simple.
+
+    </small>
+
+
+    <span>
+
+        Built for better projects.
+
+    </span>
+
+
+</footer>
+
+
+
+<!-- =========================================================
+     LOGIN CHOICE MODAL
+========================================================= -->
+
+<div id="loginModal"
+     class="login-modal">
+
+
+    <div class="login-modal-card">
+
+
+        <!-- CLOSE -->
+
+        <button
+                class="modal-close"
+                onclick="closeLoginChoice()">
+
+            <i class="fa-solid fa-xmark"></i>
+
+        </button>
+
+
+
+        <!-- ICON -->
+
+        <div class="modal-icon">
+
+            <i class="fa-solid fa-right-to-bracket"></i>
+
+        </div>
+
+
+
+        <h2>
+            Welcome to WBCMS
+        </h2>
+
+
+        <p>
+            Choose how you would like to access
+            the construction management platform.
+        </p>
+
+
+
+        <!-- CHOICES -->
+
+        <div class="login-choice-grid">
+
+
+            <!-- CLIENT -->
+
+            <button
+                    class="login-choice client-choice"
+                    onclick="openClientLogin()">
+
+
+                <div class="choice-icon">
+
+                    <i class="fa-solid fa-user"></i>
+
+                </div>
+
+
+                <strong>
+                    Client Portal
+                </strong>
+
+
+                <small>
+
+                    View projects, track progress
+                    and stay connected.
+
+                </small>
+
+
+            </button>
+
+
+
+            <!-- STAFF -->
+
+            <button
+                    class="login-choice staff-choice"
+                    onclick="openStaffLogin()">
+
+
+                <div class="choice-icon">
+
+                    <i class="fa-solid fa-users-gear"></i>
+
+                </div>
+
+
+                <strong>
+                    Staff Portal
+                </strong>
+
+
+                <small>
+
+                    Manage projects, tasks,
+                    materials and operations.
+
+                </small>
+
+
+            </button>
+
+
+        </div>
+
+
+
+        <div class="modal-footer">
+
+            🔒 Secure role-based access powered by WBCMS
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- SECURITY BADGE -->
+
+<div class="security-badge">
+
+    <i class="fa-solid fa-shield-halved"></i>
+
+    Secure Construction Platform
+
+</div>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+
+    /* =====================================================
+       GET MODAL
+    ===================================================== */
+
+    const loginModal =
+        document.getElementById("loginModal");
+
+
+
+    /* =====================================================
+       OPEN LOGIN CHOICE
+    ===================================================== */
+
+    function openLoginChoice() {
+
+        loginModal.classList.add("show");
+
+        document.body.style.overflow =
+            "hidden";
+
+    }
+
+
+
+    /* =====================================================
+       CLOSE LOGIN CHOICE
+    ===================================================== */
+
+    function closeLoginChoice() {
+
+        loginModal.classList.remove("show");
+
+        document.body.style.overflow =
+            "";
+
+    }
+
+
+
+    /* =====================================================
+       CLIENT LOGIN
+    ===================================================== */
+
+    function openClientLogin() {
+
+        window.location.href =
+            "/client-login.html";
+
+    }
+
+
+
+    /* =====================================================
+       STAFF LOGIN
+    ===================================================== */
+
+    function openStaffLogin() {
+
+        window.location.href =
+            "/staff-login.html";
+
+    }
+
+
+
+    /* =====================================================
+       CLICK OUTSIDE MODAL
+    ===================================================== */
+
+    loginModal.addEventListener(
+        "click",
+        function(event) {
+
+            if (event.target === loginModal) {
+
+                closeLoginChoice();
+
+            }
+
+        }
+    );
+
+
+
+    /* =====================================================
+       ESC KEY
+    ===================================================== */
+
+    document.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Escape" &&
+                loginModal.classList.contains("show")
+            ) {
+
+                closeLoginChoice();
+
+            }
+
+        }
+    );
+
+
+</script>
+
+
+</body>
+
+</html>
