@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WBCMS | Document Management</title>
+
+    <!-- Bootstrap Icons & Themes -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/css/premium-theme.css">
+    <link rel="stylesheet" href="/css/unified-pages.css">
+    <link rel="stylesheet" href="/css/material-inventory.css">
+    <script src="/js/theme-init.js"></script>
+
+    <style>
+        /* Document Management Specific Styling */
+        .doc-type-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+
+        .doc-type-pill.blueprint {
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.35);
+        }
+
+        .doc-type-pill.contract {
+            background: rgba(52, 211, 153, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(52, 211, 153, 0.35);
+        }
+
+        .doc-type-pill.permit {
+            background: rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.35);
+        }
+
+        .doc-type-pill.report {
+            background: rgba(168, 85, 247, 0.15);
+            color: #c084fc;
+            border: 1px solid rgba(168, 85, 247, 0.35);
+        }
+
+        .doc-type-pill.specification {
+            background: rgba(255, 122, 26, 0.15);
+            color: #ff9944;
+            border: 1px solid rgba(255, 122, 26, 0.35);
+        }
+
+        .doc-type-pill.other {
+            background: rgba(148, 163, 184, 0.15);
+            color: #cbd5e1;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: #94a3b8;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 7px;
+            border-radius: 4px;
+        }
+
+        .table-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .table-action {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+            padding: 6px 9px;
+            border-radius: 8px;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .table-action:hover {
+            color: #fff;
+            background: rgba(255, 122, 26, 0.16);
+            border-color: rgba(255, 122, 26, 0.4);
+        }
+
+        .table-action.view:hover {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: rgba(56, 189, 248, 0.4);
+            color: #38bdf8;
+        }
+
+        .table-action.delete:hover {
+            background: rgba(248, 113, 113, 0.2);
+            border-color: rgba(248, 113, 113, 0.4);
+            color: #f87171;
+        }
+
+        /* Modal Dark Aesthetic */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(6, 11, 21, 0.82);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1050;
+            padding: 20px;
+        }
+
+        .modal.show, .modal.open {
+            display: flex;
+        }
+
+        .modal-dialog {
+            background: rgba(13, 22, 41, 0.96) !important;
+            backdrop-filter: blur(24px) !important;
+            -webkit-backdrop-filter: blur(24px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            border-radius: 18px !important;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75) !important;
+            color: #f1f5f9 !important;
+            padding: 26px 30px !important;
+            width: 100%;
+            max-width: 620px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+            padding-bottom: 16px !important;
+            margin-bottom: 18px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+        }
+
+        .modal-header h2 {
+            margin: 0 !important;
+            color: #ffffff !important;
+            font-size: 19px !important;
+            font-weight: 700 !important;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-button {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: #94a3b8 !important;
+            font-size: 20px !important;
+            width: 32px !important;
+            height: 32px !important;
+            border-radius: 8px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+            line-height: 1;
+        }
+
+        .close-button:hover {
+            color: #ffffff !important;
+            background: rgba(248, 113, 113, 0.2) !important;
+            border-color: rgba(248, 113, 113, 0.4) !important;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            color: #cbd5e1 !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
+            margin-bottom: 6px !important;
+            display: block !important;
+        }
+
+        .form-group label span {
+            color: #ff5c5c;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            background: rgba(9, 16, 32, 0.85) !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            color: #f1f5f9 !important;
+            border-radius: 10px !important;
+            padding: 10px 14px !important;
+            font-size: 13px !important;
+            width: 100% !important;
+            box-sizing: border-box;
+            outline: none !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: rgba(255, 122, 26, 0.7) !important;
+            box-shadow: 0 0 0 3px rgba(255, 122, 26, 0.18) !important;
+            background: rgba(15, 25, 48, 0.95) !important;
+        }
+
+        .file-dropzone {
+            border: 2px dashed rgba(255, 255, 255, 0.18);
+            border-radius: 12px;
+            padding: 18px;
+            text-align: center;
+            background: rgba(9, 16, 32, 0.5);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .file-dropzone:hover {
+            border-color: var(--orange);
+            background: rgba(255, 122, 26, 0.05);
+        }
+
+        .file-dropzone input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .validation-message {
+            color: #f87171;
+            font-size: 11px;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .modal-actions {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-end !important;
+            gap: 12px !important;
+            margin-top: 22px !important;
+            padding-top: 16px !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+        }
+
+        .cancel-button {
+            background: rgba(255, 255, 255, 0.06) !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            color: #cbd5e1 !important;
+            padding: 9px 18px !important;
+            border-radius: 10px !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .cancel-button:hover {
+            background: rgba(255, 255, 255, 0.12) !important;
+            color: #ffffff !important;
+        }
+
+        .save-button {
+            background: linear-gradient(135deg, var(--orange), #ff4500) !important;
+            border: none !important;
+            color: #ffffff !important;
+            padding: 9px 20px !important;
+            border-radius: 10px !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            box-shadow: 0 4px 14px rgba(255, 122, 26, 0.35) !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .save-button:hover {
+            box-shadow: 0 6px 20px rgba(255, 122, 26, 0.5) !important;
+            transform: translateY(-1px) !important;
+        }
+
+        .save-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Detail Modal Styling */
+        .doc-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .doc-detail-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 12px 14px;
+        }
+
+        .doc-detail-item .label {
+            font-size: 11px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+
+        .doc-detail-item .val {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #f8fafc;
+            word-break: break-all;
+        }
+
+        @media (max-width: 768px) {
+            .form-row, .doc-detail-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-brand">
+        <div class="brand-logo">
+            <i class="bi bi-buildings-fill"></i>
+        </div>
+        <div>
+            <h2>WBCMS</h2>
+            <span>CONSTRUCTION</span>
+        </div>
+    </div>
+
+    <nav class="sidebar-navigation">
+        <p class="nav-title">MAIN MENU</p>
+
+        <a href="/dashboard.html" class="nav-item">
+            <i class="bi bi-grid-1x2-fill"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="/material-inventory.html" class="nav-item">
+            <i class="bi bi-box-seam-fill"></i>
+            <span>Material & Inventory</span>
+        </a>
+
+        <a href="/material-requests.html" class="nav-item">
+            <i class="bi bi-file-earmark-plus-fill"></i>
+            <span>Material Requests</span>
+        </a>
+
+        <a href="/projects.html" class="nav-item">
+            <i class="bi bi-building"></i>
+            <span>Projects</span>
+        </a>
+
+        <a href="/tasks.html" class="nav-item">
+            <i class="bi bi-clipboard-check"></i>
+            <span>Tasks</span>
+        </a>
+
+        <a href="/milestones.html" class="nav-item">
+            <i class="bi bi-flag-fill"></i>
+            <span>Milestones</span>
+        </a>
+
+        <a href="/progress.html" class="nav-item">
+            <i class="bi bi-graph-up-arrow"></i>
+            <span>Progress Monitoring</span>
+        </a>
+
+        <a href="/documents.html" class="nav-item active">
+            <i class="bi bi-file-earmark-text-fill"></i>
+            <span>Documents</span>
+        </a>
+
+        <p class="nav-title management-title">MANAGEMENT</p>
+
+        <a href="/reports.html" class="nav-item">
+            <i class="bi bi-bar-chart-line"></i>
+            <span>Reports</span>
+        </a>
+
+        <a href="/suppliers.html" class="nav-item">
+            <i class="bi bi-truck"></i>
+            <span>Suppliers</span>
+        </a>
+
+        <a href="/users.html" class="nav-item">
+            <i class="bi bi-people-fill"></i>
+            <span>Users</span>
+        </a>
+
+        <a href="/client-profile.html" class="nav-item">
+            <i class="bi bi-person-badge"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+        <div class="sidebar-version">
+            WBCMS v1.0
+            <span>Construction Management</span>
+        </div>
+        <button class="logout-button" onclick="logout()">
+            <i class="bi bi-box-arrow-left"></i>
+            Logout
+        </button>
+    </div>
+
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+
+    <!-- TOP HEADER -->
+    <header class="top-header">
+
+        <div class="header-left">
+            <button class="mobile-menu" onclick="toggleSidebar()" aria-label="Toggle navigation">
+                <i class="bi bi-list"></i>
+            </button>
+
+            <div class="header-module-badge">
+                <div class="module-icon">
+                    <i class="bi bi-folder-fill"></i>
+                </div>
+                <div class="module-text">
+                    <span class="module-title">Document Vault</span>
+                    <span class="module-sub"><span class="live-pulse-dot"></span> Live DB</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="header-admin-nav">
+                <button class="hdr-btn primary" onclick="openDocumentModal()" title="Upload or Add New Document">
+                    <i class="bi bi-cloud-arrow-up-fill"></i>
+                    <span>Upload Document</span>
+                </button>
+                <a href="/projects.html" class="hdr-btn" title="View Projects">
+                    <i class="bi bi-building"></i>
+                    <span>Projects</span>
+                </a>
+                <a href="/tasks.html" class="hdr-btn" title="View Tasks">
+                    <i class="bi bi-clipboard-check"></i>
+                    <span>Tasks</span>
+                </a>
+                <a href="/reports.html" class="hdr-btn" title="View Reports">
+                    <i class="bi bi-bar-chart-line"></i>
+                    <span>Reports</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <button class="notification-button" title="Notifications">
+                <i class="bi bi-bell"></i>
+                <span class="notification-badge" id="notifBadge">0</span>
+            </button>
+
+            <div class="header-separator"></div>
+
+            <div class="profile" onclick="this.classList.toggle('open')" id="profileCard">
+                <div class="profile-avatar">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+                <div class="profile-details">
+                    <strong id="profileName">Staff User</strong>
+                    <span id="profileRole">Staff</span>
+                </div>
+                <i class="bi bi-chevron-down"></i>
+
+                <div class="profile-dropdown-menu">
+                    <div class="dropdown-user-header">
+                        <strong id="dropdownUserName">Staff User</strong>
+                        <span>Document Registry</span>
+                    </div>
+                    <a href="/projects.html" class="dropdown-item">
+                        <i class="bi bi-building"></i>
+                        <span>Projects</span>
+                    </a>
+                    <a href="/reports.html" class="dropdown-item">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <span>Reports</span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item logout" onclick="logout()">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Sign Out</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+    <!-- PAGE CONTENT -->
+    <section class="page-content" style="padding: 24px 32px;">
+
+        <!-- HERO SECTION -->
+        <div class="hero-section">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <span class="hero-label">ENGINEERING BLUEPRINTS, PERMITS & CONTRACTS</span>
+                <h1>Document & Blueprint Management</h1>
+                <p>Maintain architectural CAD blueprints, municipality permits, contractor agreements, and engineering inspection files with version control.</p>
+                <div class="hero-meta" style="display:flex; gap:16px; margin-top:14px; flex-wrap:wrap;">
+                    <span style="font-size:12px; color:#cbd5e1; display:inline-flex; align-items:center; gap:6px;">
+                        <i class="bi bi-file-earmark-lock-fill" style="color:var(--green);"></i> Encrypted Vault
+                    </span>
+                    <span style="font-size:12px; color:#cbd5e1; display:inline-flex; align-items:center; gap:6px;">
+                        <i class="bi bi-database-check" style="color:var(--blue);"></i> SQL Server Live Registry
+                    </span>
+                    <span style="font-size:12px; color:#cbd5e1; display:inline-flex; align-items:center; gap:6px;">
+                        <i class="bi bi-layers-fill" style="color:var(--orange);"></i> Version Revision Control
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATS GRID -->
+        <section class="stats-grid" style="margin-bottom: 24px;">
+
+            <!-- Total Documents -->
+            <div class="stat-card">
+                <div class="stat-icon total">
+                    <i class="bi bi-folder-fill"></i>
+                </div>
+                <div>
+                    <span class="stat-title">Total Documents</span>
+                    <h2 id="totalDocuments">0</h2>
+                </div>
+            </div>
+
+            <!-- Blueprints -->
+            <div class="stat-card">
+                <div class="stat-icon in-stock">
+                    <i class="bi bi-file-earmark-ruled-fill"></i>
+                </div>
+                <div>
+                    <span class="stat-title">CAD Blueprints</span>
+                    <h2 id="blueprintDocs">0</h2>
+                </div>
+            </div>
+
+            <!-- Contracts -->
+            <div class="stat-card">
+                <div class="stat-icon in-stock">
+                    <i class="bi bi-file-earmark-text-fill"></i>
+                </div>
+                <div>
+                    <span class="stat-title">Contracts</span>
+                    <h2 id="contractDocs">0</h2>
+                </div>
+            </div>
+
+            <!-- Permits & Approvals -->
+            <div class="stat-card">
+                <div class="stat-icon low-stock">
+                    <i class="bi bi-file-earmark-check-fill"></i>
+                </div>
+                <div>
+                    <span class="stat-title">Permits & Approvals</span>
+                    <h2 id="permitDocs">0</h2>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- DOCUMENTS CARD -->
+        <section class="content-card">
+
+            <div class="card-header" style="display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;">
+                <div>
+                    <h3 style="font-size:17px; font-weight:700; color:#fff; margin:0 0 4px 0;">Site Documents Directory</h3>
+                    <p style="font-size:12px; color:var(--muted); margin:0;">Categorized architectural blueprints, legal permits, and engineering files</p>
+                </div>
+
+                <div class="table-filters" style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                    <div class="search-container" style="min-width:220px;">
+                        <i class="bi bi-search"></i>
+                        <input
+                                type="text"
+                                id="documentSearch"
+                                placeholder="Search title or description..."
+                                autocomplete="off"
+                        >
+                    </div>
+
+                    <select id="projectFilter" onchange="renderDocuments()" style="background:rgba(9,16,32,0.85); border:1px solid rgba(255,255,255,0.12); color:#f1f5f9; padding:8px 14px; border-radius:10px; font-size:13px; max-width:200px;">
+                        <option value="">All Projects</option>
+                    </select>
+
+                    <select id="typeFilter" onchange="renderDocuments()" style="background:rgba(9,16,32,0.85); border:1px solid rgba(255,255,255,0.12); color:#f1f5f9; padding:8px 14px; border-radius:10px; font-size:13px;">
+                        <option value="">All Document Types</option>
+                        <option value="BLUEPRINT">CAD Blueprints</option>
+                        <option value="CONTRACT">Contracts & Agreements</option>
+                        <option value="PERMIT">Permits & Approvals</option>
+                        <option value="REPORT">Inspection Reports</option>
+                        <option value="SPECIFICATION">Specifications</option>
+                        <option value="OTHER">Other Documents</option>
+                    </select>
+
+                    <button
+                            type="button"
+                            class="save-button"
+                            onclick="openDocumentModal()"
+                    >
+                        <i class="bi bi-cloud-arrow-up-fill"></i>
+                        Add Document
+                    </button>
+                </div>
+            </div>
+
+            <!-- TABLE -->
+            <div class="table-container" style="overflow-x:auto;">
+                <table>
+                    <thead>
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th>Document Title</th>
+                        <th>Type</th>
+                        <th>Project</th>
+                        <th>File / Link</th>
+                        <th>Uploaded By</th>
+                        <th>Date Uploaded</th>
+                        <th style="width: 140px; text-align: right;">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="documentTableBody">
+                    <tr>
+                        <td colspan="8" style="text-align:center; padding: 40px;">
+                            <i class="bi bi-arrow-repeat" style="font-size: 24px; animation: spin 1s linear infinite; display: inline-block; color:var(--orange);"></i>
+                            <p style="margin-top: 8px; color: #8a99ad;">Loading documents from SQL Server...</p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- EMPTY STATE -->
+            <div class="empty-state" id="emptyTable" style="display:none; text-align: center; padding: 40px;">
+                <i class="bi bi-folder-x" style="font-size: 42px; color: #64748b;"></i>
+                <h4 style="margin-top: 12px; color: #cbd5e1; font-size: 16px;">No Documents Found</h4>
+                <p style="color: #64748b; font-size: 13px; max-width:400px; margin:6px auto 0;">No document records match the current filter or search criteria.</p>
+            </div>
+
+        </section>
+
+    </section>
+
+</main>
+
+<!-- DOCUMENT ADD / EDIT MODAL -->
+<div class="modal" id="documentModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h2 id="modalTitle"><i class="bi bi-cloud-arrow-up-fill" style="color:var(--orange);"></i> Add New Document</h2>
+            <button type="button" class="close-button" onclick="closeDocumentModal()" aria-label="Close">&times;</button>
+        </div>
+        <form id="documentForm" onsubmit="saveDocument(event)">
+            <input type="hidden" id="documentId">
+
+            <div class="form-group">
+                <label for="documentTitle">Document Title <span>*</span></label>
+                <input
+                        type="text"
+                        id="documentTitle"
+                        maxlength="180"
+                        placeholder="e.g. Ground Floor Structural Reinforcement Plan"
+                        required
+                >
+                <small class="validation-message" id="titleError"></small>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="documentProject">Project <span>*</span></label>
+                    <select id="documentProject" required>
+                        <option value="">Select Project</option>
+                    </select>
+                    <small class="validation-message" id="projectError"></small>
+                </div>
+                <div class="form-group">
+                    <label for="documentType">Document Type <span>*</span></label>
+                    <select id="documentType" required>
+                        <option value="BLUEPRINT" selected>CAD Blueprint / Drawing</option>
+                        <option value="CONTRACT">Contract / Agreement</option>
+                        <option value="PERMIT">Permit / Legal Clearance</option>
+                        <option value="REPORT">Site Inspection Report</option>
+                        <option value="SPECIFICATION">Material Specification</option>
+                        <option value="OTHER">Other Technical File</option>
+                    </select>
+                    <small class="validation-message" id="typeError"></small>
+                </div>
+            </div>
+
+            <!-- File Upload & URL Section -->
+            <div class="form-group">
+                <label>Upload File (Local File or External Reference)</label>
+                <div class="file-dropzone" id="dropzone">
+                    <i class="bi bi-cloud-arrow-up" style="font-size: 26px; color: var(--orange); display: block; margin-bottom: 4px;"></i>
+                    <span id="fileDropText" style="font-size: 12.5px; color: #cbd5e1;">Click to choose a file or drag and drop</span>
+                    <input type="file" id="documentFileInput" onchange="handleFileSelected(event)">
+                </div>
+                <small id="uploadProgressText" style="font-size: 11px; color: #38bdf8; display: none; margin-top: 4px;"></small>
+            </div>
+
+            <div class="form-group">
+                <label for="fileUrl">File URL or Vault Path <span>*</span></label>
+                <input
+                        type="text"
+                        id="fileUrl"
+                        maxlength="500"
+                        placeholder="e.g. /uploads/documents/blueprint.pdf or https://..."
+                        required
+                >
+                <small class="validation-message" id="urlError"></small>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="version">Version Revision</label>
+                    <input type="text" id="version" maxlength="20" placeholder="e.g. v1.0, v2.1" value="v1.0">
+                </div>
+                <div class="form-group">
+                    <label for="fileSize">File Size</label>
+                    <input type="text" id="fileSize" maxlength="50" placeholder="e.g. 4.2 MB">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="documentDescription">Document Description / Engineering Notes</label>
+                <textarea
+                        id="documentDescription"
+                        rows="3"
+                        maxlength="1000"
+                        placeholder="Brief summary of document content, approval conditions, or revision details..."
+                ></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="cancel-button" onclick="closeDocumentModal()">Cancel</button>
+                <button type="submit" class="save-button" id="submitDocBtn">
+                    <i class="bi bi-check-circle-fill"></i>
+                    Save Document
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- DOCUMENT DETAILS MODAL -->
+<div class="modal" id="detailsModal" role="dialog" aria-modal="true" aria-labelledby="detailsModalTitle">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h2 id="detailsModalTitle"><i class="bi bi-file-earmark-text-fill" style="color:#38bdf8;"></i> Document Details</h2>
+            <button type="button" class="close-button" onclick="closeDetailsModal()" aria-label="Close">&times;</button>
+        </div>
+        <div id="detailsModalContent">
+            <!-- Populated via JS -->
+        </div>
+        <div class="modal-actions" id="detailsModalActions">
+            <button type="button" class="cancel-button" onclick="closeDetailsModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+    <i class="bi bi-check-circle-fill" id="toastIcon"></i>
+    <span id="toastMessage">Action successful.</span>
+</div>
+
+<!-- JAVASCRIPT -->
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        if (sidebar) sidebar.classList.toggle("open");
+    }
+</script>
+<script src="/js/documents.js"></script>
+<script src="/js/notifications.js"></script>
+</body>
+
+</html>
