@@ -29,6 +29,33 @@ public class GlobalExceptionHandler {
             .collect(Collectors.toMap(e->e.getField(), e->e.getDefaultMessage()==null?"Invalid value":e.getDefaultMessage(), (a,b)->a, LinkedHashMap::new));
         return ResponseEntity.badRequest().body(new ErrorResponse(LocalDateTime.now(),400,"Validation Failed","Check the request fields",errors));
     }
+    @ExceptionHandler(org.springframework.security.authentication.BadCredentialsException.class)
+    ResponseEntity<ErrorResponse> badCredentials(org.springframework.security.authentication.BadCredentialsException ex) {
+        String msg = (ex.getMessage() == null || ex.getMessage().equalsIgnoreCase("Bad credentials"))
+                ? "Invalid username/email or password."
+                : ex.getMessage();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorResponse(LocalDateTime.now(), 401, "Unauthorized", msg, Map.of()));
+    }
+
+    @ExceptionHandler(org.springframework.security.core.AuthenticationException.class)
+    ResponseEntity<ErrorResponse> authenticationException(org.springframework.security.core.AuthenticationException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorResponse(LocalDateTime.now(), 401, "Unauthorized", ex.getMessage() == null ? "Authentication failed" : ex.getMessage(), Map.of()));
+    }
+
+    @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
+    ResponseEntity<ErrorResponse> accessDenied(org.springframework.security.access.AccessDeniedException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ErrorResponse(LocalDateTime.now(), 403, "Forbidden", ex.getMessage() == null ? "Access denied: you do not have permission to access this resource." : ex.getMessage(), Map.of()));
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    ResponseEntity<ErrorResponse> illegalArgument(IllegalArgumentException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(LocalDateTime.now(), 400, "Bad Request", ex.getMessage(), Map.of()));
+    }
+
     @ExceptionHandler(Exception.class)
     ResponseEntity<ErrorResponse> generic(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

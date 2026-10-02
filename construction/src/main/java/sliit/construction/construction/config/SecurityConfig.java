@@ -59,16 +59,41 @@ public class SecurityConfig {
                 .authorizeHttpRequests(a -> a
 
                         // ==========================================
-                        // PUBLIC WEBSITE PAGES
+                        // PUBLIC WEBSITE PAGES & ROUTES
                         // ==========================================
                         .requestMatchers(
                                 "/",
-                                "/index.html",
-                                "/client-login.html",
-                                "/staff-login.html",
-                                "/login.html",
-                                "/dashboard.html",
-                                "/projects.html"
+                                "/error",
+                                "/*.html",
+                                "/login",
+                                "/staff-login",
+                                "/dashboard",
+                                "/projects",
+                                "/project-manager-dashboard",
+                                "/project-details",
+                                "/tasks",
+                                "/progress",
+                                "/materials",
+                                "/clients",
+                                "/users",
+                                "/documents",
+                                "/reports",
+                                "/settings",
+                                "/notifications",
+                                "/communication",
+                                "/activity-logs",
+                                "/milestones",
+                                "/task-assignments",
+                                "/material-requests",
+                                "/material-inventory",
+                                "/suppliers",
+                                "/client-login",
+                                "/client-register",
+                                "/client-dashboard",
+                                "/client-profile",
+                                "/client-project-requests",
+                                "/roles",
+                                "/role-management"
                         ).permitAll()
 
 
@@ -79,6 +104,7 @@ public class SecurityConfig {
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",
+                                "/uploads/**",
                                 "/favicon.ico"
                         ).permitAll()
 

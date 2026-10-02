@@ -24,12 +24,19 @@ public class JwtService {
     }
 
     public String generate(String username, String role) {
+        return generate(username, role, false);
+    }
+
+    public String generate(String username, String role, boolean rememberMe) {
         Date now = new Date();
+        // 30 days for Remember Me (30 * 24 * 60 * 60 * 1000 = 2592000000 ms), otherwise standard expiration
+        long tokenDuration = rememberMe ? (30L * 24 * 60 * 60 * 1000L) : expiration;
         return Jwts.builder()
                 .subject(username)
                 .claim("role", role)
+                .claim("rememberMe", rememberMe)
                 .issuedAt(now)
-                .expiration(new Date(now.getTime() + expiration))
+                .expiration(new Date(now.getTime() + tokenDuration))
                 .signWith(key)
                 .compact();
     }
